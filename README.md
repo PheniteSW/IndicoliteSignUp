@@ -14,6 +14,7 @@ Build 2D games from any browser — no downloads, no installs, no high-powered P
 | `index.html` | The full single-page waitlist site (HTML + CSS + JS inline). |
 | `assets/icon.png` | App icon / favicon / logo. **Add this file** (see below). |
 | `assets/icon.svg` | Placeholder logo used automatically until `icon.png` exists. |
+| `assets/hero.png` | Hero banner shown at the top of the page. **Add this file** (see below). |
 
 ## Add the real app icon
 
@@ -22,6 +23,14 @@ social share image. A generated SVG placeholder is shown until you add it.
 
 To use your icon, drop the PNG at `assets/icon.png` (a square image, e.g. 512×512,
 works best). No code changes needed — it's already wired up.
+
+Likewise, the wide marketing banner is wired to `assets/hero.png` at the top of
+the page (it stays hidden until the file exists). Drop your banner image there.
+
+**Easiest way to add these images** (works around the blocked image host): on
+GitHub, open the repo on this branch → **Add file → Upload files** → drag the
+PNGs into the `assets/` folder → commit. They'll appear on the live site with no
+code changes.
 
 > Note: the original image link (`i.postimg.cc`) could not be fetched from the
 > build environment because that host is blocked by the network egress policy.

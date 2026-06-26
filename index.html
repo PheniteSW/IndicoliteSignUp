@@ -69,7 +69,17 @@
     .nav a { color: var(--muted); margin-left: 22px; font-size: .95rem; }
 
     /* Hero */
-    .hero { padding: 56px 0 30px; text-align: center; }
+    .hero { padding: 40px 0 30px; text-align: center; }
+    .hero-banner {
+      display: block;
+      width: 100%;
+      max-width: 980px;
+      height: auto;
+      margin: 0 auto 36px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
     .eyebrow {
       display: inline-block;
       font-size: .82rem;
@@ -217,6 +227,9 @@
 
     <!-- HERO -->
     <section class="hero">
+      <!-- Hero banner. Add the artwork at assets/hero.png; it hides itself until present. -->
+      <img class="hero-banner" src="assets/hero.png" alt="Indicolite — browser-based IDE for modern developers"
+           onerror="this.style.display='none';" />
       <span class="eyebrow">Browser-based game studio · Beta</span>
       <h1>Your next game starts<br />in your browser.</h1>
       <p class="sub">
