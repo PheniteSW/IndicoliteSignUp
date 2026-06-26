@@ -43,7 +43,23 @@ python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
 
-## Deploy
+## Deploy to GitHub Pages
 
-Any static host works (Render static site, GitHub Pages, Netlify, etc.).
-Point it at the repo root; `index.html` is the entry point.
+This is a static site (no build step), so GitHub Pages serves it directly from
+the repo root.
+
+1. Push this branch and merge it into `main` (Pages deploys from a branch).
+2. In the repo: **Settings → Pages**.
+3. Under **Build and deployment**, set **Source = Deploy from a branch**.
+4. Choose **Branch = `main`**, **Folder = `/ (root)`**, then **Save**.
+5. Wait ~1 minute. The site goes live at
+   `https://polypall.github.io/IndicoliteSignUp/`.
+
+Notes:
+- `.nojekyll` is included so GitHub serves the files as-is (no Jekyll processing).
+- All asset paths are **relative** (`assets/icon.png`), which is required because
+  project Pages are served from a subpath. Don't switch them to leading-slash
+  absolute paths or they'll 404.
+
+Other static hosts (Render static site, Netlify, etc.) also work — point them at
+the repo root; `index.html` is the entry point.
