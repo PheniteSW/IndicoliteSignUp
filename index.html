@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indicolite — Build 2D games in your browser</title>
+  <meta name="description" content="Indicolite is a browser-based game creation studio. Build 2D games from any browser — no downloads, no installs, no high-powered PC. Join the beta waitlist." />
+
+  <!-- Favicon. Swap icon.png in /assets when ready; the SVG is a placeholder fallback. -->
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon.png" />
+
+  <!-- Social preview -->
+  <meta property="og:title" content="Indicolite — Build 2D games in your browser" />
+  <meta property="og:description" content="No downloads. No installs. No gaming PC. Build and publish 2D games from any browser." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/icon.png" />
+
+  <style>
+    :root {
+      --bg: #06121b;
+      --bg-2: #0a1f2e;
+      --ink: #eaf6fb;
+      --muted: #9fc0cf;
+      --teal: #1fd3c4;
+      --cyan: #38bdf8;
+      --indigo: #4f6bff;
+      --card: rgba(255, 255, 255, 0.04);
+      --border: rgba(120, 200, 220, 0.16);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1100px 600px at 80% -10%, rgba(79, 107, 255, 0.22), transparent 60%),
+        radial-gradient(900px 500px at 10% 0%, rgba(31, 211, 196, 0.18), transparent 55%),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img {
+      width: 40px; height: 40px; border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.35);
+      background: linear-gradient(135deg, var(--teal), var(--indigo));
+    }
+    .brand b { font-size: 1.15rem; letter-spacing: .2px; }
+    .nav a { color: var(--muted); margin-left: 22px; font-size: .95rem; }
+
+    /* Hero */
+    .hero { padding: 56px 0 30px; text-align: center; }
+    .eyebrow {
+      display: inline-block;
+      font-size: .82rem;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--card);
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-size: clamp(2.1rem, 5.5vw, 3.6rem);
+      line-height: 1.08;
+      margin: 0 0 18px;
+      background: linear-gradient(120deg, #ffffff, #bfe9ff 45%, var(--teal));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .sub {
+      font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto 28px;
+    }
+
+    /* Pills */
+    .pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 0 auto 36px; max-width: 760px; }
+    .pill {
+      font-size: .9rem; color: var(--ink);
+      background: var(--card); border: 1px solid var(--border);
+      padding: 8px 14px; border-radius: 999px;
+    }
+    .pill span { color: var(--teal); margin-right: 6px; font-weight: 700; }
+
+    /* Waitlist form */
+    .signup {
+      max-width: 540px; margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .signup h2 { margin: 0 0 6px; font-size: 1.25rem; }
+    .signup p.lede { margin: 0 0 18px; color: var(--muted); font-size: .95rem; }
+    .field { display: flex; gap: 10px; flex-wrap: wrap; }
+    input[type="email"] {
+      flex: 1 1 220px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: var(--ink);
+      font-size: 1rem;
+      outline: none;
+    }
+    input[type="email"]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(31,211,196,.18); }
+    button {
+      padding: 14px 22px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #04161a;
+      background: linear-gradient(120deg, var(--teal), var(--cyan));
+      transition: transform .08s ease, filter .15s ease;
+    }
+    button:hover { filter: brightness(1.06); }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .form-note { margin-top: 12px; font-size: .82rem; color: var(--muted); }
+    .status { margin-top: 14px; font-size: .95rem; min-height: 1.2em; }
+    .status.ok { color: var(--teal); }
+    .status.err { color: #ff8a8a; }
+
+    /* Sections */
+    section.block { padding: 56px 0; }
+    h3.section-title { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 8px; text-align: center; }
+    p.section-sub { text-align: center; color: var(--muted); margin: 0 auto 34px; max-width: 620px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .card .ic { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+    .card h4 { margin: 0 0 8px; font-size: 1.08rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    /* Game types */
+    .types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .type {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      background: linear-gradient(160deg, rgba(79,107,255,.10), rgba(31,211,196,.05));
+    }
+    .type b { display: block; margin-bottom: 6px; }
+    .type span { color: var(--muted); font-size: .92rem; }
+
+    .ai-tip {
+      margin: 28px auto 0; max-width: 720px; text-align: center;
+      color: var(--muted); font-size: 1rem;
+      background: var(--card); border: 1px dashed var(--border);
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .ai-tip code { color: var(--teal); background: rgba(31,211,196,.08); padding: 2px 8px; border-radius: 6px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0 50px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    footer .links { margin-bottom: 12px; }
+    footer .links a { margin: 0 12px; }
+
+    @media (max-width: 560px) {
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <img src="assets/icon.png" alt="Indicolite logo"
+             onerror="this.onerror=null;this.src='assets/icon.svg';" />
+        <b>Indicolite</b>
+      </div>
+      <nav class="nav">
+        <a href="#how">How it works</a>
+        <a href="#games">Game types</a>
+        <a href="#join">Join the beta</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="eyebrow">Browser-based game studio · Beta</span>
+      <h1>Your next game starts<br />in your browser.</h1>
+      <p class="sub">
+        Tired of expensive software or IDEs you have to download? Indicolite lets anyone
+        build 2D games from any browser, anywhere. Upload characters, design sprites,
+        add sounds, and publish your game.
+      </p>
+
+      <div class="pills">
+        <div class="pill"><span>✓</span>No downloads</div>
+        <div class="pill"><span>✓</span>No installs</div>
+        <div class="pill"><span>✓</span>No expensive software</div>
+        <div class="pill"><span>✓</span>No gaming PC needed</div>
+        <div class="pill"><span>✓</span>No account required</div>
+      </div>
+
+      <!-- WAITLIST -->
+      <div class="signup" id="join">
+        <h2>Join the waitlist</h2>
+        <p class="lede">Be first in line when Indicolite opens up. We'll only email you about the beta.</p>
+        <form id="waitlist-form" novalidate>
+          <div class="field">
+            <input type="email" id="email" name="email" placeholder="you@example.com"
+                   autocomplete="email" required aria-label="Email address" />
+            <button type="submit" id="submit-btn">Get early access</button>
+          </div>
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+          <p class="form-note">No spam. Unsubscribe anytime. Feedback? <a href="mailto:polySW@proton.me">polySW@proton.me</a></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="block" id="how">
+      <h3 class="section-title">How it works</h3>
+      <p class="section-sub">A full 2D game studio that runs entirely in the browser — powered by the Phaser 3 engine and an optional AI assistant.</p>
+      <div class="grid">
+        <div class="card">
+          <span class="ic">🎨</span>
+          <h4>Design everything in-browser</h4>
+          <p>Upload your characters, design sprites, and add sounds. No external tools, no setup — it all lives in the tab.</p>
+        </div>
+        <div class="card">
+          <span class="ic">🤖</span>
+          <h4>AI assistant (optional)</h4>
+          <p>Add an Anthropic API key to unlock AI chat and AI sprite generation. Describe what you want and it helps build it.</p>
+        </div>
+        <div class="card">
+          <span class="ic">⚡</span>
+          <h4>Built on Phaser 3 + JavaScript</h4>
+          <p>The studio runs 100% in JavaScript with the battle-tested Phaser 3 engine — smooth, fast, and the browser's home turf.</p>
+        </div>
+        <div class="card">
+          <span class="ic">🚀</span>
+          <h4>Publish from the tab</h4>
+          <p>When your game is ready, publish it straight from the browser. No accounts to create to get started.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME TYPES -->
+    <section class="block" id="games">
+      <h3 class="section-title">What you can build</h3>
+      <p class="section-sub">Phaser 3 supports a wide range of 2D genres out of the box.</p>
+      <div class="types">
+        <div class="type"><b>📖 Visual novels</b><span>Dialogue boxes, character art, click to advance.</span></div>
+        <div class="type"><b>🔎 Point-and-click adventures</b><span>Explore scenes, click hotspots, solve puzzles.</span></div>
+        <div class="type"><b>⚔️ Turn-based RPGs</b><span>Menus, stats, and battle systems.</span></div>
+        <div class="type"><b>🌿 Choose-your-own-adventure</b><span>Branching choices that change the story.</span></div>
+      </div>
+      <p class="ai-tip">
+        Just ask the AI assistant <code>"make me a visual novel with dialogue and choices"</code> and it'll build it.
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="links">
+        <a href="https://indicolite.onrender.com/" target="_blank" rel="noopener">Beta site</a>
+        <a href="https://polypall.github.io/Phenite/" target="_blank" rel="noopener">Company</a>
+        <a href="mailto:polySW@proton.me">Feedback</a>
+      </div>
+      <div>© <span id="year"></span> Indicolite. Build 2D games from any browser, anywhere.</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---- Waitlist form ----
+    // To capture emails for real, set FORM_ENDPOINT to your form backend
+    // (e.g. a Formspree endpoint: https://formspree.io/f/XXXXXXX) or your own API.
+    // Until then, submissions are saved locally so the page is fully testable.
+    const FORM_ENDPOINT = ""; // <-- paste your endpoint here
+
+    const form = document.getElementById('waitlist-form');
+    const emailInput = document.getElementById('email');
+    const statusEl = document.getElementById('status');
+    const btn = document.getElementById('submit-btn');
+
+    function setStatus(msg, type) {
+      statusEl.textContent = msg;
+      statusEl.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    function validEmail(v) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+
+      if (!validEmail(email)) {
+        setStatus('Please enter a valid email address.', 'err');
+        emailInput.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      setStatus('Adding you to the list…', '');
+
+      try {
+        if (FORM_ENDPOINT) {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ email: email })
+          });
+          if (!res.ok) throw new Error('Request failed');
+        } else {
+          // Local fallback so the form works before a backend is wired up.
+          const list = JSON.parse(localStorage.getItem('indicolite_waitlist') || '[]');
+          if (!list.includes(email)) list.push(email);
+          localStorage.setItem('indicolite_waitlist', JSON.stringify(list));
+        }
+        form.reset();
+        setStatus("You're on the list! We'll be in touch about the beta. 🎉", 'ok');
+      } catch (err) {
+        setStatus('Something went wrong. Please try again or email polySW@proton.me.', 'err');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
