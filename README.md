@@ -36,12 +36,15 @@ code changes.
 > build environment because that host is blocked by the network egress policy.
 > Add the PNG directly to the repo, or host it on an allowed domain.
 
-## Wire up real email capture
+## Sign-up form (Tally)
 
-By default the form saves sign-ups to `localStorage` so the page is testable.
-To collect emails for real, open `index.html`, find `FORM_ENDPOINT`, and set it
-to your form backend — e.g. a [Formspree](https://formspree.io) endpoint or your
-own API. The form POSTs `{ "email": "..." }` as JSON.
+The **Get early access** button opens a [Tally](https://tally.so) form
+(`https://tally.so/r/J9gly4`) where responses are collected. It opens as a modal
+popup via Tally's embed script, and falls back to opening the form in a new tab
+if that script is blocked.
+
+To use a different form, update the `href` and the `data-tally-open` form ID on
+the `.cta-btn` link in `index.html` (both reference `J9gly4`).
 
 ## Run locally
 

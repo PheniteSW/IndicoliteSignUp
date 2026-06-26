@@ -152,24 +152,22 @@
       outline: none;
     }
     input[type="email"]:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(31,211,196,.18); }
-    button {
-      padding: 14px 22px;
+    .cta-btn {
+      display: inline-block;
+      padding: 15px 30px;
       border: 0;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       cursor: pointer;
       color: #04161a;
+      text-decoration: none;
       background: linear-gradient(120deg, var(--teal), var(--cyan));
       transition: transform .08s ease, filter .15s ease;
     }
-    button:hover { filter: brightness(1.06); }
-    button:active { transform: translateY(1px); }
-    button:disabled { opacity: .6; cursor: not-allowed; }
-    .form-note { margin-top: 12px; font-size: .82rem; color: var(--muted); }
-    .status { margin-top: 14px; font-size: .95rem; min-height: 1.2em; }
-    .status.ok { color: var(--teal); }
-    .status.err { color: #ff8a8a; }
+    .cta-btn:hover { filter: brightness(1.06); text-decoration: none; }
+    .cta-btn:active { transform: translateY(1px); }
+    .form-note { margin-top: 14px; font-size: .82rem; color: var(--muted); }
 
     /* Sections */
     section.block { padding: 56px 0; }
@@ -258,15 +256,17 @@
       <div class="signup" id="join">
         <h2>Join the waitlist</h2>
         <p class="lede">Be first in line when Indicolite opens up. We'll only email you about the beta.</p>
-        <form id="waitlist-form" novalidate>
-          <div class="field">
-            <input type="email" id="email" name="email" placeholder="you@example.com"
-                   autocomplete="email" required aria-label="Email address" />
-            <button type="submit" id="submit-btn">Get early access</button>
-          </div>
-          <div class="status" id="status" role="status" aria-live="polite"></div>
-          <p class="form-note">No spam. Unsubscribe anytime. Feedback? <a href="mailto:polySW@proton.me">polySW@proton.me</a></p>
-        </form>
+        <!-- Opens the Tally sign-up form as a modal; the href is a plain fallback
+             if Tally's popup script is blocked. -->
+        <a class="cta-btn"
+           href="https://tally.so/r/J9gly4"
+           target="_blank" rel="noopener"
+           data-tally-open="J9gly4"
+           data-tally-layout="modal"
+           data-tally-width="540"
+           data-tally-overlay="1"
+           data-tally-emoji-animation="none">Get early access</a>
+        <p class="form-note">Opens our quick sign-up form. Feedback? <a href="mailto:polySW@proton.me">polySW@proton.me</a></p>
       </div>
     </section>
 
@@ -336,62 +336,20 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 
-    // ---- Waitlist form ----
-    // To capture emails for real, set FORM_ENDPOINT to your form backend
-    // (e.g. a Formspree endpoint: https://formspree.io/f/XXXXXXX) or your own API.
-    // Until then, submissions are saved locally so the page is fully testable.
-    const FORM_ENDPOINT = ""; // <-- paste your endpoint here
-
-    const form = document.getElementById('waitlist-form');
-    const emailInput = document.getElementById('email');
-    const statusEl = document.getElementById('status');
-    const btn = document.getElementById('submit-btn');
-
-    function setStatus(msg, type) {
-      statusEl.textContent = msg;
-      statusEl.className = 'status' + (type ? ' ' + type : '');
+  <!-- Tally popup embed. The "Get early access" link opens form J9gly4 as a modal.
+       If this script is blocked, the link still opens the form in a new tab. -->
+  <script>
+    var d = document, w = "https://tally.so/widgets/embed.js",
+        v = function () {
+          if (typeof Tally !== "undefined") Tally.loadEmbeds();
+        };
+    if (typeof Tally !== "undefined") v();
+    else if (d.querySelector('script[src="' + w + '"]') == null) {
+      var s = d.createElement("script");
+      s.src = w; s.onload = v; s.onerror = v; d.body.appendChild(s);
     }
-
-    function validEmail(v) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-    }
-
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = emailInput.value.trim();
-
-      if (!validEmail(email)) {
-        setStatus('Please enter a valid email address.', 'err');
-        emailInput.focus();
-        return;
-      }
-
-      btn.disabled = true;
-      setStatus('Adding you to the list…', '');
-
-      try {
-        if (FORM_ENDPOINT) {
-          const res = await fetch(FORM_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ email: email })
-          });
-          if (!res.ok) throw new Error('Request failed');
-        } else {
-          // Local fallback so the form works before a backend is wired up.
-          const list = JSON.parse(localStorage.getItem('indicolite_waitlist') || '[]');
-          if (!list.includes(email)) list.push(email);
-          localStorage.setItem('indicolite_waitlist', JSON.stringify(list));
-        }
-        form.reset();
-        setStatus("You're on the list! We'll be in touch about the beta.", 'ok');
-      } catch (err) {
-        setStatus('Something went wrong. Please try again or email polySW@proton.me.', 'err');
-      } finally {
-        btn.disabled = false;
-      }
-    });
   </script>
 </body>
 </html>
