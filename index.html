@@ -167,6 +167,14 @@
     }
     .cta-btn:hover { filter: brightness(1.06); text-decoration: none; }
     .cta-btn:active { transform: translateY(1px); }
+    .cta-btn.is-disabled { opacity: .45; cursor: not-allowed; filter: none; transform: none; }
+    .agree {
+      display: flex; gap: 10px; align-items: flex-start;
+      text-align: left; max-width: 460px; margin: 0 auto 18px;
+      font-size: .88rem; color: var(--muted); line-height: 1.45;
+    }
+    .agree input { margin-top: 3px; width: 16px; height: 16px; flex: 0 0 auto; accent-color: var(--teal); cursor: pointer; }
+    .agree.flash span { color: #ff8a8a; }
     .form-note { margin-top: 14px; font-size: .82rem; color: var(--muted); }
 
     /* Sections */
@@ -211,8 +219,15 @@
       color: var(--muted);
       font-size: .92rem;
     }
-    footer .links { margin-bottom: 12px; }
+    footer .links { margin-bottom: 18px; display: flex; flex-wrap: wrap; gap: 8px 0; justify-content: center; }
     footer .links a { margin: 0 12px; }
+    .disclaimer {
+      max-width: 720px; margin: 0 auto 22px; padding: 16px 18px;
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--card); color: var(--muted);
+      font-size: .82rem; line-height: 1.55; text-align: left;
+    }
+    .disclaimer strong { color: var(--ink); }
 
     @media (max-width: 560px) {
       .nav { display: none; }
@@ -258,15 +273,21 @@
         <p class="lede">Be first in line when Indicolite opens up. We'll only email you about the beta.</p>
         <!-- Opens the Tally sign-up form as a modal; the href is a plain fallback
              if Tally's popup script is blocked. -->
-        <a class="cta-btn"
+        <label class="agree">
+          <input type="checkbox" id="agree-box" />
+          <span>I understand that projects are <strong>saved locally in my browser</strong> and may be lost, and that I should back up my work. (<a href="#saving">Read the full disclaimer</a>.)</span>
+        </label>
+        <a class="cta-btn is-disabled"
+           id="cta-btn"
            href="https://tally.so/r/J9gly4"
            target="_blank" rel="noopener"
+           aria-disabled="true"
            data-tally-open="J9gly4"
            data-tally-layout="modal"
            data-tally-width="540"
            data-tally-overlay="1"
            data-tally-emoji-animation="none">Get early access</a>
-        <p class="form-note">Opens our quick sign-up form. Feedback? <a href="mailto:polySW@proton.me">polySW@proton.me</a></p>
+        <p class="form-note">Tick the box above to continue. Feedback? <a href="mailto:polySW@proton.me">polySW@proton.me</a></p>
       </div>
     </section>
 
@@ -327,15 +348,55 @@
     <div class="wrap">
       <div class="links">
         <a href="https://indicolite.onrender.com/" target="_blank" rel="noopener">Beta site</a>
-        <a href="https://polypall.github.io/Phenite/" target="_blank" rel="noopener">Company</a>
-        <a href="mailto:polySW@proton.me">Feedback</a>
+        <a href="https://phenitesw.github.io/Phenite/" target="_blank" rel="noopener">Company</a>
+        <a href="https://phenitesw.github.io/IndicoliteSignUp/" target="_blank" rel="noopener">Sign up for updates</a>
+        <a href="mailto:polySW@proton.me">polySW@proton.me</a>
       </div>
+
+      <div class="disclaimer" id="saving">
+        <strong>Project saving — please read.</strong>
+        Indicolite is in beta. The projects you create are saved <strong>locally in your
+        browser</strong>, on your own device — not on our servers. This means clearing your
+        browser data, switching to a different browser or device, or using private/incognito
+        mode may permanently erase your projects. Always export and keep your own backups of
+        any work you want to save. Indicolite is provided "as is" during beta, and we are not
+        responsible for lost or corrupted projects.
+      </div>
+
       <div>© <span id="year"></span> Indicolite. Build 2D games from any browser, anywhere.</div>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Gate the sign-up button on the disclaimer checkbox.
+    (function () {
+      var box = document.getElementById('agree-box');
+      var cta = document.getElementById('cta-btn');
+      var agree = box.closest('.agree');
+
+      var TALLY_ID = 'J9gly4';
+      function sync() {
+        var ok = box.checked;
+        cta.classList.toggle('is-disabled', !ok);
+        cta.setAttribute('aria-disabled', String(!ok));
+        // Toggle the Tally trigger so the popup can't open until agreed.
+        if (ok) { cta.setAttribute('data-tally-open', TALLY_ID); agree.classList.remove('flash'); }
+        else { cta.removeAttribute('data-tally-open'); }
+      }
+      box.addEventListener('change', sync);
+      sync();
+
+      cta.addEventListener('click', function (e) {
+        if (!box.checked) {
+          e.preventDefault();          // block the href fallback
+          e.stopImmediatePropagation(); // block Tally's delegated handler
+          agree.classList.add('flash');
+          box.focus();
+        }
+      }, true); // capture phase so this runs first
+    })();
   </script>
 
   <!-- Tally popup embed. The "Get early access" link opens form J9gly4 as a modal.
